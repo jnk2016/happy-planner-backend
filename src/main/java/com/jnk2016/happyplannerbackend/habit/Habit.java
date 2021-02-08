@@ -21,10 +21,19 @@ public class Habit implements Serializable {
     private int dailyStatus = 0;
     private boolean completed = false;
     private int streak = 0;
-    private LocalDate date = LocalDate.now();
+    private LocalDate date;
 
     public boolean getCompleted(){
         return completed;
+    }
+
+    public void checkCompleted() {
+        if(this.dailyStatus == this.dailyGoal){    // If the daily status meets the daily goal then set to completed (for the day)
+            this.setCompleted(true);
+        }
+        else{
+            this.setCompleted(false);
+        }
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

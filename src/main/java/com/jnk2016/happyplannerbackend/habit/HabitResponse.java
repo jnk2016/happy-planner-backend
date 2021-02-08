@@ -11,12 +11,12 @@ public class HabitResponse {
     private boolean completed;
     private int streak;
 
-    public HabitResponse(long habitId, String label, int dailyGoal, int dailyStatus, boolean completed, int streak) {
-        this.habitId = habitId;
-        this.label = label;
-        this.dailyGoal = dailyGoal;
-        this.dailyStatus = dailyStatus;
-        this.completed = completed;
-        this.streak = streak;
+    public HabitResponse(Habit habit) {
+        this.habitId = habit.getHabitId();
+        this.label = habit.getLabel();
+        this.dailyGoal = habit.getDailyGoal();
+        this.dailyStatus = habit.getDailyStatus();
+        this.completed = habit.getCompleted();
+        this.streak = habit.getStreak();
     }
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="mood")
@@ -15,9 +15,9 @@ public class Mood implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="mood_id")
     private long moodId;
-    private String label;
+    private int label;
     private String note = "";
-    private LocalDate timestamp = LocalDate.now();
+    private LocalDateTime timestamp;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)

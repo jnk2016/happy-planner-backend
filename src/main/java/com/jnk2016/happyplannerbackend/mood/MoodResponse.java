@@ -4,16 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class MoodResponse {
     private long moodId;
-    private String label;
+    private int label;
     private String note = "";
-    private LocalDate timestamp;
+    private LocalDateTime timestamp;
 
-
+    public MoodResponse(Mood mood){
+        this.moodId = mood.getMoodId();
+        this.label = mood.getLabel();
+        this.note = mood.getNote();
+        this.timestamp = mood.getTimestamp();
+    }
 }
