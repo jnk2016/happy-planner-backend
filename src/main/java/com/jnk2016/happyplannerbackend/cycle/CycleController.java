@@ -6,9 +6,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -25,26 +25,28 @@ public class CycleController {
 
     /** Add a new cycle (start of a new period) and can be initial period */
     @PostMapping
-    public CycleResponse logCycle(Authentication auth, @RequestBody CycleRequest requestBody){
+    public CycleResponse logCycle(Authentication auth, @RequestBody CycleRequest newCycle){
         ApplicationUser user = applicationUserRepository.findByUsername((auth.getName()));
-        System.out.println(requestBody.getRecentPeriodStart());
 
-        if(requestBody.firstCycle==true){
-            requestBody.previousPeriodLength -= 1;
-            requestBody.recentPeriodEnd = requestBody.recentPeriodStart.plusDays(requestBody.previousPeriodLength);
+        if(newCycle.firstCycle==true){
+            newCycle.previousPeriodLength -= 1;
+            newCycle.recentPeriodEnd = newCycle.recentPeriodStart.plusDays(newCycle.previousPeriodLength);
         }
         else{
             Cycle previousCycle = cycleRepository.findFirstByUser(user, sort);
-            requestBody.recentPeriodEnd = null;
+            newCycle.recentPeriodEnd = null;
 
-            long cycleSpanDays = ChronoUnit.DAYS.between(previousCycle.getRecordedPeriodStart(), requestBody.recentPeriodStart);    // +1 in Cycle.java constructor
-            requestBody.previousCycleLength = cycleSpanDays;
+            long cycleSpanDays = ChronoUnit.DAYS.between(previousCycle.getRecordedPeriodStart(), newCycle.recentPeriodStart);    // +1 in Cycle.java constructor
+            newCycle.previousCycleLength = cycleSpanDays;
 
             long periodSpanDays = ChronoUnit.DAYS.between(previousCycle.getRecordedPeriodStart(), previousCycle.getRecordedPeriodEnd());
-            requestBody.previousPeriodLength = periodSpanDays;
+            newCycle.previousPeriodLength = periodSpanDays;
+
+            // Record the date before new period start as the end of the previous cycle
+            previousCycle.setRecordedCycleEnd(newCycle.recentPeriodStart.minusDays(1));
         }
 
-        Cycle cycle = new Cycle(requestBody.recentPeriodStart, requestBody.recentPeriodEnd, requestBody.previousCycleLength, requestBody.previousPeriodLength);
+        Cycle cycle = new Cycle(newCycle.recentPeriodStart, newCycle.recentPeriodEnd, newCycle.previousCycleLength, newCycle.previousPeriodLength);
         cycle.setUser(user);
         cycleRepository.save(cycle);
         return new CycleResponse(cycle);
@@ -61,6 +63,29 @@ public class CycleController {
             cycleResponse.add(cycle);
         }
         return cycleResponse;
+    }
+
+    /** Get the average cycle length and average period length for the user */
+    @GetMapping("/average")
+    public HashMap<String, Long> averageStatistics(Authentication auth){
+        HashMap<String, Long> response = new HashMap<>();
+        ApplicationUser user = applicationUserRepository.findByUsername(auth.getName());
+        List<Cycle>userCycleData = cycleRepository.findByUser(user);
+        long avrgCycleLength = 0;
+        long avrgPeriodLength = 0;
+        long cycles = 0;
+        for(Cycle userCycle : userCycleData){
+            if(userCycle.getRecordedCycleEnd() != null){
+                avrgCycleLength += ChronoUnit.DAYS.between(userCycle.getRecordedPeriodStart(),userCycle.getRecordedCycleEnd())+1;
+                avrgPeriodLength += ChronoUnit.DAYS.between(userCycle.getRecordedPeriodStart(),userCycle.getRecordedPeriodEnd())+1;
+                cycles += 1;
+            }
+        }
+        avrgCycleLength /= cycles;
+        avrgPeriodLength /= cycles;
+        response.put("averageCycleLength", avrgCycleLength);
+        response.put("averagePeriodLength",avrgPeriodLength);
+        return response;
     }
 
     /** Get the user's current cycle */

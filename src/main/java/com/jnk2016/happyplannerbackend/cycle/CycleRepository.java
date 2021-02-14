@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface CycleRepository extends JpaRepository<Cycle,Long> {
     List<Cycle> findByUser(ApplicationUser user);
-    Cycle findFirstByUser(ApplicationUser user, Sort sort);
+    Cycle findFirstByUser(ApplicationUser user, Sort sort); // Finding the current cycle of logged in user
 }

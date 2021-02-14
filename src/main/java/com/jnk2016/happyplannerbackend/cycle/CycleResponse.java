@@ -16,6 +16,7 @@ public class CycleResponse {
     private LocalDate predictedPeriodEnd;       // Prediction for when period will end
     private LocalDate recordedPeriodEnd;        // When period actually ended
     private LocalDate predictedNextPeriodStart; // When next cycle starts (also when the period starts)
+    private LocalDate recordedCycleEnd;
     private long predictedCycleLength;
 
     private long daysUntilNextPeriod;
@@ -27,6 +28,7 @@ public class CycleResponse {
         this.predictedPeriodEnd = cycle.getPredictedPeriodEnd();
         this.recordedPeriodEnd = cycle.getRecordedPeriodEnd();
         this.predictedNextPeriodStart = cycle.getPredictedNextPeriodStart();
+        this.recordedCycleEnd = cycle.getRecordedCycleEnd();
         this.predictedCycleLength = cycle.getPredictedCycleLength();
 
         /* Only for getting the current period */
