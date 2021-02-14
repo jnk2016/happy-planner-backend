@@ -45,10 +45,10 @@ public class MoodController {
 
     /** Update attributes of a mood */
     @PutMapping("/{id}")
-    public void updateMood(@PathVariable long id, @RequestBody Mood response) throws Exception {
+    public void updateMood(@PathVariable long id, @RequestBody Mood requestBody) throws Exception {
         Mood mood = moodRepository.findById(id).orElseThrow(() -> new Exception("This mood does not exist!"));
-        mood.setLabel(response.getLabel());
-        mood.setNote(response.getNote());
+        mood.setLabel(requestBody.getLabel());
+        mood.setNote(requestBody.getNote());
         moodRepository.save(mood);
     }
 

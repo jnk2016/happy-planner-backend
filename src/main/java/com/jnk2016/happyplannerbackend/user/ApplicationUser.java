@@ -1,6 +1,7 @@
 package com.jnk2016.happyplannerbackend.user;
 
 import com.jnk2016.happyplannerbackend.braindumpnote.BrainDumpNote;
+import com.jnk2016.happyplannerbackend.cycle.Cycle;
 import com.jnk2016.happyplannerbackend.habit.Habit;
 import com.jnk2016.happyplannerbackend.mood.Mood;
 import lombok.Data;
@@ -51,4 +52,6 @@ public class ApplicationUser implements Serializable {
     private List<Mood> moods;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BrainDumpNote> brainDumpNotes;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Cycle> cycles;
 }

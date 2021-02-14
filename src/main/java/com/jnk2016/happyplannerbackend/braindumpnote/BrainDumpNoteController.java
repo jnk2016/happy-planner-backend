@@ -42,13 +42,13 @@ public class BrainDumpNoteController {
 
     /** Update attributes of a dump note */
     @PutMapping("/{id}")
-    public void updateNote(@PathVariable long id, @RequestBody BrainDumpNote response) throws Exception {
+    public void updateNote(@PathVariable long id, @RequestBody BrainDumpNote requestBody) throws Exception {
         BrainDumpNote brainDumpNote = brainDumpNoteRepository.findById(id).orElseThrow(() -> new Exception("This note does not exist!"));
-        brainDumpNote.setTitle(response.getTitle());
-        brainDumpNote.setNote(response.getNote());
-        brainDumpNote.setHigh(response.getHigh());
-        brainDumpNote.setMed(response.getMed());
-        brainDumpNote.setLow(response.getLow());
+        brainDumpNote.setTitle(requestBody.getTitle());
+        brainDumpNote.setNote(requestBody.getNote());
+        brainDumpNote.setHigh(requestBody.getHigh());
+        brainDumpNote.setMed(requestBody.getMed());
+        brainDumpNote.setLow(requestBody.getLow());
         brainDumpNoteRepository.save(brainDumpNote);
     }
 

@@ -34,7 +34,7 @@ public class HabitController {
     /** Get all of the habits pertaining to the logged in user */
     @GetMapping
     public List<HabitResponse> getHabits(Authentication auth){
-        ApplicationUser user = applicationUserRepository.findByUsername((auth.getName()));  /* Obtains the current user */
+        ApplicationUser user = applicationUserRepository.findByUsername(auth.getName());  /* Obtains the current user */
         List<Habit>userHabitData = habitRepository.findByUser(user);
         List<HabitResponse> habitResponse = new ArrayList<>();
         /* Iterate through habit list to map response object to each user habit */
@@ -67,11 +67,11 @@ public class HabitController {
 
     /** Update a specific habit with new information */
     @PutMapping("/update/{id}")
-    public void updateHabit(@PathVariable long id, @RequestBody Habit response) throws Exception {
+    public void updateHabit(@PathVariable long id, @RequestBody Habit requestBody) throws Exception {
         Habit habit = habitRepository.findById(id).orElseThrow(()-> new Exception("This habit does not exist!"));
-        habit.setLabel(response.getLabel());
-        habit.setDailyStatus(response.getDailyStatus());
-        habit.setDailyGoal(response.getDailyGoal());
+        habit.setLabel(requestBody.getLabel());
+        habit.setDailyStatus(requestBody.getDailyStatus());
+        habit.setDailyGoal(requestBody.getDailyGoal());
         habit.checkCompleted();
         habitRepository.save(habit);
     }
