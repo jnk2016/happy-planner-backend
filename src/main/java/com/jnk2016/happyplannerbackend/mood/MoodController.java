@@ -2,11 +2,14 @@ package com.jnk2016.happyplannerbackend.mood;
 
 import com.jnk2016.happyplannerbackend.user.ApplicationUser;
 import com.jnk2016.happyplannerbackend.user.ApplicationUserRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -14,6 +17,7 @@ import java.util.List;
 public class MoodController {
     private ApplicationUserRepository applicationUserRepository;
     private MoodRepository moodRepository;
+    private Sort sort = Sort.by("timestamp").descending();
 
     public MoodController(ApplicationUserRepository applicationUserRepository, MoodRepository moodRepository){
         this.applicationUserRepository = applicationUserRepository;
@@ -39,6 +43,24 @@ public class MoodController {
         for(Mood userMood : userMoodData){
             MoodResponse mood = new MoodResponse(userMood);
             moodResponse.add(mood);
+        }
+        return moodResponse;
+    }
+
+    /** Get all user moods for specified day */
+    @GetMapping("/day")
+    public List<MoodResponse> getMoodsForDay(Authentication auth, @RequestBody HashMap<String, LocalDate> requestBody) {
+        ApplicationUser user = applicationUserRepository.findByUsername(auth.getName());
+        List<Mood>userMoodData = moodRepository.findByUser(user, sort);
+        List<MoodResponse> moodResponse = new ArrayList<>();
+        for(Mood userMood : userMoodData){
+            if(requestBody.get("date").compareTo(userMood.getTimestamp().toLocalDate()) == 0){
+                MoodResponse mood = new MoodResponse(userMood);
+                moodResponse.add(mood);
+            }
+            else if(requestBody.get("date").compareTo(userMood.getTimestamp().toLocalDate()) < 1){
+                break;
+            }
         }
         return moodResponse;
     }

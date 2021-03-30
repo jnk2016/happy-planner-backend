@@ -2,8 +2,11 @@ package com.jnk2016.happyplannerbackend.user;
 
 import com.jnk2016.happyplannerbackend.braindumpnote.BrainDumpNote;
 import com.jnk2016.happyplannerbackend.cycle.Cycle;
+import com.jnk2016.happyplannerbackend.groceryitem.GroceryItem;
 import com.jnk2016.happyplannerbackend.habit.Habit;
+import com.jnk2016.happyplannerbackend.meal.Meal;
 import com.jnk2016.happyplannerbackend.mood.Mood;
+import com.jnk2016.happyplannerbackend.recipe.Recipe;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -54,4 +57,10 @@ public class ApplicationUser implements Serializable {
     private List<BrainDumpNote> brainDumpNotes;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cycle> cycles;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Recipe> recipes;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<GroceryItem> groceries;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Meal> meals;
 }
