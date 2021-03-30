@@ -27,7 +27,7 @@ public class UserController {
 
     /** Get the water intake for the user */
     @GetMapping("/water")
-    public int waterIntake(Authentication auth) {
+    public double waterIntake(Authentication auth) {
         ApplicationUser user = applicationUserRepository.findByUsername((auth.getName()));  // Obtains the current user
         return user.getDailyWater();
     }

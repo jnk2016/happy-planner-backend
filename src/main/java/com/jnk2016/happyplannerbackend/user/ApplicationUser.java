@@ -2,11 +2,14 @@ package com.jnk2016.happyplannerbackend.user;
 
 import com.jnk2016.happyplannerbackend.braindumpnote.BrainDumpNote;
 import com.jnk2016.happyplannerbackend.cycle.Cycle;
+import com.jnk2016.happyplannerbackend.goal.Goal;
 import com.jnk2016.happyplannerbackend.groceryitem.GroceryItem;
 import com.jnk2016.happyplannerbackend.habit.Habit;
 import com.jnk2016.happyplannerbackend.meal.Meal;
 import com.jnk2016.happyplannerbackend.mood.Mood;
 import com.jnk2016.happyplannerbackend.recipe.Recipe;
+import com.jnk2016.happyplannerbackend.task.Task;
+import com.jnk2016.happyplannerbackend.waterintake.WaterIntake;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -27,7 +30,7 @@ public class ApplicationUser implements Serializable {
     private String password;
     private String firstname;
     private String lastname;
-    private int dailyWater;
+    private double dailyWater;
 
     public long getUserId() {
         return userId;
@@ -63,4 +66,10 @@ public class ApplicationUser implements Serializable {
     private List<GroceryItem> groceries;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Meal> meals;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<WaterIntake> waterIntake;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Goal> goals;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Task> tasks;
 }
