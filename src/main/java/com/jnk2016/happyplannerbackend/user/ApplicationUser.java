@@ -5,18 +5,19 @@ import com.jnk2016.happyplannerbackend.cycle.Cycle;
 import com.jnk2016.happyplannerbackend.goal.Goal;
 import com.jnk2016.happyplannerbackend.groceryitem.GroceryItem;
 import com.jnk2016.happyplannerbackend.habit.Habit;
+import com.jnk2016.happyplannerbackend.income.Income;
 import com.jnk2016.happyplannerbackend.meal.Meal;
 import com.jnk2016.happyplannerbackend.mood.Mood;
+import com.jnk2016.happyplannerbackend.payment.Payment;
 import com.jnk2016.happyplannerbackend.recipe.Recipe;
+import com.jnk2016.happyplannerbackend.savingsgoal.SavingsGoal;
 import com.jnk2016.happyplannerbackend.task.Task;
 import com.jnk2016.happyplannerbackend.waterintake.WaterIntake;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name="user")
@@ -72,4 +73,10 @@ public class ApplicationUser implements Serializable {
     private List<Goal> goals;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Task> tasks;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SavingsGoal> savingsGoals;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Income> incomes;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Payment> payments;
 }
